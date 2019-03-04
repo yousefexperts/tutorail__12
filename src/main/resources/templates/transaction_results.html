@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>cryotoManager::Transactions::Results</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.css" rel="stylesheet">
+    
+    <link href="/css/bootstrap_fixes.css" rel="stylesheet">
+    
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<nav class="navbar navbar-inverse" id="menuHodler">
+		
+	</nav>
+
+	
+	<div class="container" style="width: 80%;">
+		<div class="page-header">
+			<h1>Transactions</h1>
+		</div>
+		<p class="lead">This page shows the registered transactions.</p>
+		
+		<p>
+			<a href="/transaction/add" class="btn btn-success" role="button"><span class="glyphicon glyphicon-asterisk"></span> New simple transaction</a>
+			<a href="/transaction/advanced" class="btn btn-success" role="button"><span class="glyphicon glyphicon-console"></span> New advanced transaction</a>
+		</p>
+				
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">
+				<a data-toggle="collapse" href="#collapseTable">Filter results</a>
+			</h3>
+		  </div>
+		  <div id="collapseTable" class="panel-collapse collapse">
+			  <table class="table">
+			  	<tr>
+			  		<td>Transaction type:</td>
+			  		<td>
+			  			<select name="type" id="type" class="form-control filterField">
+							<option value="">-Select type-</option>
+							<option th:each="transactionType : ${transactionTypes}" th:value="${transactionType.id}" th:text="${transactionType.type}">type</option>
+						</select>
+			  		</td>
+			  	</tr>
+			  	<tr>
+			  		<td width="20%">Wallet:</td>
+			  		<td>
+			  			<select id="wallet" name="wallet" class="form-control filterField">
+							<option value="">-Select wallet-</option>
+							<option th:each="wallet : ${walletList}" th:value="${wallet.id}" th:text="${wallet.address + ' (' + wallet.coin.coinMarketCapCoin.symbol + ')'}">address (coinName)</option>
+						</select>
+			  		</td>
+			  	</tr>
+			  	<tr>
+			  		<td width="20%">Coin:</td>
+			  		<td>
+			  			<select id="coin" name="coin" class="form-control filterField">
+							<option value="">-Select coin-</option>
+							<option th:each="coin : ${coinList}" th:value="${coin.id}" th:text="${coin.coinMarketCapCoin.symbol + ' (' + coin.coinMarketCapCoin.name + ')'}">symbol (name)</option>
+						</select>
+			  		</td>
+			  	</tr>
+			  	<tr>
+			  		<td width="20%">Portfolio:</td>
+			  		<td>
+			  			<select id="portfolio" name="portfolio" class="form-control filterField">
+							<option value="">-Select portfolio-</option>
+							<option th:each="portfolio : ${portfolioList}" th:value="${portfolio.id}" th:text="${portfolio.name}">portfolio</option>
+						</select>
+			  		</td>
+			  	</tr>
+			  	<tr>
+			  		<td colspan="2">
+			  			<form action="#" th:action="@{/transaction/results}" method="get">
+			  				<input type="hidden" id="search" name="search" th:value="${search}" />
+			  				<input type="hidden" id="sortBy" name="sortBy" th:value="${sortBy}" />
+							<input type="hidden" id="direction" name="direction" th:value="${direction}" />
+			  				<button type="submit" id="actualSubmitButton" style="display:none;">Hidden</button>
+			  			</form>
+			  			<button type="button" class="btn btn-info" id="filterResults">Filter results</button>
+			  		</td>
+			  	</tr>
+			  </table>
+			</div>
+		</div>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><span>Date</span> <span class="buttonHolder transactionDate numeric"></span></th>
+					<th><span>Type</span> <span class="buttonHolder transactionType alphabet"></span></th>
+					<th><span>Wallet</span> <span class="buttonHolder walletAddress alphabet"></span></th>
+					<th><span>Coin</span> <span class="buttonHolder coinSymbol alphabet"></span></th>
+					<th><span>Portfolio</span> <span class="buttonHolder portfolioName alphabet"></span></th>
+					<th><span>Amount</span> <span class="buttonHolder amount numeric"></span></th>
+					<th><span>Value</span> <span class="buttonHolder value numeric"></span></th>
+					<th><span>Current value</span> <span class="buttonHolder currentValue numeric"></span></th>
+					<th><span>Difference</span> <span class="buttonHolder difference numeric"></span></th>
+					<th><span>Remarks</span> <span class="buttonHolder remarks alphabet"></span></th>
+					<th>Open transaction</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+				<tr th:each="transaction : ${transactions}">
+					<td th:text="${#dates.format(transaction.transactionDate, 'dd-MM-yyyy')}">withdrawalDate</td>
+					<td th:text="${transaction.transactionType.type}">remarks</td>
+					<td class="cutoff" th:text="${transaction.wallet.address}">address</td>
+					<td th:text="${transaction.wallet.coin.coinMarketCapCoin.symbol}">coinName</td>
+					<td class="cutoff" th:text="${transaction.wallet.portfolio.name}">portfolioName</td>
+					<td th:utext="${#numbers.formatDecimal(transaction.amount, 1, 'POINT', 8, 'COMMA')}">amount</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(transaction.value, 1, 'POINT', 2, 'COMMA')}">withdrawalValue</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(transaction.currentValue, 1, 'POINT', 2, 'COMMA')}">currentWithdrawalValue</td>
+					<td class="profitLoss" th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(transaction.currentDifference, 1, 'POINT', 2, 'COMMA')}">currentDepositDifference</td>
+
+					<td class="cutoff" th:text="${transaction.remarks}">remarks</td>
+					<td>
+						<a th:href="@{/transaction/details/{id}(id=${transaction.id})}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+						</a>
+					</td>
+				</tr>
+				
+				
+				
+			</tbody>
+		</table>
+				      
+    </div>
+    
+    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/loadMenu.js"></script>
+    <script src="/js/profitLossFix.js"></script>
+    
+    <script src="/js/cutOffText.js"></script>
+    
+    
+    <script src="/js/sortingButtons.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			var searchString = $('#search').val();
+			fillFilterFields(searchString);
+
+			$('#filterResults').click(function(){
+				createSearchString();
+			});
+	    });
+	
+		function fillFilterFields(searchString)
+		{
+			//console.log(searchString);
+			
+			// check if the field is filled
+			if(searchString == ""){
+				return;
+			}
+
+			// fill the filter fields with the selected values
+			var keyValuePairs = searchString.split(",");
+			// loop through the key value pairs
+			for(var i = 0; i < keyValuePairs.length; i++){
+				console.log(keyValuePairs[i]);
+
+				// now split the keyvaluepairs
+				var keyValuePair = keyValuePairs[i];
+				var keyValue = keyValuePair.split(":");
+
+				// get the id of the field and the value
+				var id = keyValue[0];
+				var value = keyValue[1];
+
+				// now select the option
+				$('#' + id).val(value);
+			}
+		}
+
+		function createSearchString(){
+			var searchString = "";
+
+			// loop through the filter fields
+			$('.filterField').each(function() {
+				// get the id of this object
+				var id = $(this).attr('id');
+
+				// get the value
+				var value = $(this).val();
+
+				// check if the value is not empty
+				if(value != ""){
+					// append field and value to the search string
+					searchString = searchString + id + ":" + value + ",";
+				}
+				
+			});
+
+			// now remove the last comma
+			searchString = searchString.substring(0, searchString.length - 1);
+			console.log(searchString);
+
+			// set the value
+			$('#search').val(searchString);
+
+			// now actually send the form
+			$('#actualSubmitButton').trigger('click');
+		}
+	</script>
+
+</body>
+</html>

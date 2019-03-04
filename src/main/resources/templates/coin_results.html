@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>cryotoManager::Coin::Results</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.css" rel="stylesheet">
+    
+    <link href="/css/bootstrap_fixes.css" rel="stylesheet">
+    
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<input type="hidden" id="sortBy" th:value="${sortBy}" />
+	<input type="hidden" id="direction" th:value="${direction}" />
+	
+	<nav class="navbar navbar-inverse" id="menuHodler">
+		
+	</nav>
+
+	
+	<div class="container">
+		<div class="page-header">
+			<h1>Registered coins</h1>
+		</div>
+		<p class="lead">This page shows the registered coins.</p>
+		
+		<p>
+			<a href="/coin/add" class="btn btn-success" role="button"><span class="glyphicon glyphicon-asterisk"></span> Register new coin</a>
+			<a href="/coin/update" class="btn btn-success" role="button"><span class="glyphicon glyphicon-refresh"></span> Update coin values</a>
+		</p>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><span>Coin name</span> <span class="buttonHolder name alphabet"></span></th>
+					<th><span>Symbol</span> <span class="buttonHolder symbol alphabet"></span></th>
+					<th><span>Current value</span> <span class="buttonHolder currentValue numeric"></span></th>
+					<th><span>Change last hour</span> <span class="buttonHolder winLoss1h numeric"></span></th>
+					<th><span>Change last day</span> <span class="buttonHolder winLoss1d numeric"></span></th>
+					<th><span>Change last week</span> <span class="buttonHolder winLoss1w numeric"></span></th>
+					<th>Open coin</th>
+					<th>Show chart</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="coin : ${coinList}">
+					<td th:text="${coin.coinMarketCapCoin.name}">name</td>
+					<td th:text="${coin.coinMarketCapCoin.symbol}">symbol</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(coin.currentCoinValue, 1, 'POINT', 2, 'COMMA')}">currentValue</td>
+					<td class="profitLoss" th:text="${#numbers.formatDecimal(coin.winLoss1h, 1, 'POINT', 2, 'COMMA') + '%'}">1h</td>
+					<td class="profitLoss" th:text="${#numbers.formatDecimal(coin.winLoss1d, 1, 'POINT', 2, 'COMMA') + '%'}">1d</td>
+					<td class="profitLoss" th:text="${#numbers.formatDecimal(coin.winLoss1w, 1, 'POINT', 2, 'COMMA') + '%'}">1w</td>
+					<td>
+						<a th:href="@{/coin/details/{id}(id=${coin.id})}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+							
+						</a>
+					</td>
+					<td>
+						<a th:href="@{/coin/chart/{id}(id=${coin.id})}" >
+							<span class="glyphicon glyphicon-stats"></span>
+							
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+      
+    </div>
+    
+    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/loadMenu.js"></script>
+    <script src="/js/profitLossFix.js"></script>
+    <script src="/js/sortingButtons.js"></script>
+
+</body>
+</html>

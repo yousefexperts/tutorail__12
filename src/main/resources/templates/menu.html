@@ -1,0 +1,84 @@
+<div class="container-fluid" xmlns:th="http://www.thymeleaf.org">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed"
+			data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+			aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span> 
+			<span class="icon-bar"></span> 
+			<span class="icon-bar"></span> 
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/">cryptoManager &copy;</a>
+	</div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li>
+				<a href="/">Dashboard <span class="sr-only"></span></a>
+			</li>
+			<li class="dropdown"><a href="#" class="dropdown-toggle"
+				data-toggle="dropdown" role="button" aria-haspopup="true"
+				aria-expanded="false">Coins <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="/coin/add">Add coin</a></li>
+					<li><a href="/coin/results">Show coins</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="/cmc/sync">Sync CMC Coins</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a href="#" class="dropdown-toggle"
+				data-toggle="dropdown" role="button" aria-haspopup="true"
+				aria-expanded="false">Portfolio <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="/portfolio/add">Create portfolio</a></li>
+					<li><a href="/portfolio/results">Show portfolios</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a href="#" class="dropdown-toggle"
+				data-toggle="dropdown" role="button" aria-haspopup="true"
+				aria-expanded="false">Wallet <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="/wallet/add">Add wallet</a></li>
+					<li><a href="/wallet/results">Show wallets</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a href="#" class="dropdown-toggle"
+				data-toggle="dropdown" role="button" aria-haspopup="true"
+				aria-expanded="false">Transactions <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="/transaction/add">Add transaction</a></li>
+					<li><a href="/transaction/advanced">Add advanced transaction</a></li>
+					<li><a href="/transaction/results">Show transactions</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="/transaction/import">Import transactions</a></li>
+					<li><a href="/transaction/export">Export transactions</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown"><a href="#" class="dropdown-toggle"
+				data-toggle="dropdown" role="button" aria-haspopup="true"
+				aria-expanded="false">Profile <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li class="disabled"><a href="#" th:text="${username}">username</a></li>
+					<li><a href="/legal.html">Legal information</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="/profile/edit">Edit profile</a></li>
+					<li><a href="/api/manageKeys">API keys</a></li>
+					<!-- 
+					<li role="separator" class="divider"></li>
+					<li><a href="#">Administrator page</a></li>
+					 -->
+					<li role="separator" class="divider"></li>
+					
+					<li><a href="/logout">Log off</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<!-- /.navbar-collapse -->
+</div>
+<!-- /.container-fluid -->

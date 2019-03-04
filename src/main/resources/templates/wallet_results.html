@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>cryotoManager::Wallet::Results</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.css" rel="stylesheet">
+    
+    <link href="/css/bootstrap_fixes.css" rel="stylesheet">
+    
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	
+	<nav class="navbar navbar-inverse" id="menuHodler">
+		
+	</nav>
+
+	
+	<div class="container">
+		<div class="page-header">
+			<h1>Registered wallets</h1>
+		</div>
+		<p class="lead">This page shows the registered wallets.</p>
+		
+		<p>
+			<a href="/wallet/add" class="btn btn-success" role="button"><span class="glyphicon glyphicon-asterisk"></span> Register new wallet</a>
+		</p>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Wallet</th>
+					<th>Description</th>
+					<th>Coin</th>
+					<th>Portfolio</th>
+					<th>Current value</th>
+					<th>Open wallet</th>
+					<th>Show chart</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="wallet : ${walletList}">
+					<td th:text="${wallet.address}">walletAddress</td>
+					<td th:text="${wallet.description}">description</td>
+					<td th:text="${wallet.coin.coinMarketCapCoin.symbol}">coinName</td>
+					<td th:text="${wallet.portfolio.name}">portfolioName</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(wallet.currentWalletValue, 1, 'POINT', 2, 'COMMA')}">currentValue</td>
+					<td>
+						<a th:href="@{/wallet/details/{id}(id=${wallet.id})}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+						</a>
+					</td>
+					<td>
+						<a th:href="@{/wallet/chart/{id}(id=${wallet.id})}" >
+							<span class="glyphicon glyphicon-stats"></span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+      
+    </div>
+    
+    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/loadMenu.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>cryotoManager::Portfolio::Details</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.css" rel="stylesheet">
+    
+    <link href="/css/bootstrap_fixes.css" rel="stylesheet">
+    
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	
+	<nav class="navbar navbar-inverse" id="menuHodler">
+		
+	</nav>
+
+	
+	<div class="container">
+		<div class="page-header">
+			<h1 th:text="${portfolio.name}">Portfolio details</h1>
+		</div>
+		<p class="lead">See the details for the portfolio '<span th:text="${portfolio.name}">name</span>'.</p>
+		
+		<p>
+			<a href="/portfolio/results" class="btn btn-info" role="button"><span class="glyphicon glyphicon-list"></span> Return to list</a>
+		</p>
+		
+		<table class="table table-striped">
+			<tbody>
+				<tr>
+					<td>Portfolio name:</td>
+					<td th:text="${portfolio.name}">walletAddress</td>
+				</tr>
+				<tr>
+					<td>Description:</td>
+					<td th:text="${portfolio.description}">walletAddress</td>
+				</tr>
+				<tr>
+					<td>Number attached wallets:</td>
+					<td th:text="${countWallets}">countWallets</td>
+				</tr>
+				<tr>
+					<td>Total deposited:</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(portfolio.portfolioTotalDeposited, 1, 'POINT', 2, 'COMMA')}">totalDeposited</td>
+				</tr>
+				<tr>
+					<td>Total withdrawn:</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(portfolio.portfolioTotalWithdrawn, 1, 'POINT', 2, 'COMMA')}">totalWithdrawn</td>
+				</tr>
+				<tr>
+					<td>Total investment:</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(portfolio.portfolioTotalInvestment, 1, 'POINT', 2, 'COMMA')}">totalInvested</td>
+				</tr>
+				<tr>
+					<td>Total value:</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(portfolio.portfolioTotalValue, 1, 'POINT', 2, 'COMMA')}">totalValue</td>
+				</tr>
+				<tr>
+					<td>Gain from investment:</td>
+					<td class="profitLoss" th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(portfolio.portfolioProfitLoss, 1, 'POINT', 2, 'COMMA')}">profitLoss</td>
+				</tr>
+				<tr>
+					<td>Return on Investment:</td>
+					<td th:text="${#numbers.formatDecimal(portfolio.portfolioROI * 100, 1, 'POINT', 2, 'COMMA') + '%'}">ROI</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<p>
+			<a th:href="@{/portfolio/chart/{id}(id=${portfolioId})}" class="btn btn-info" role="button"><span class="glyphicon glyphicon-stats"></span> Show chart</a>
+			<a th:href="@{/portfolio/access/{id}(id=${portfolioId})}" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-user"></span> User access</a>
+			<a th:href="@{/portfolio/apiAccess/{id}(id=${portfolioId})}" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-tag"></span> API access</a>
+			<a th:href="@{/portfolio/edit/{id}(id=${portfolioId})}" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+			<a th:href="@{/portfolio/delete/{id}(id=${portfolioId})}" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+		</p>
+		
+		<div class="page-header">
+			<h2>Wallets</h2>
+		</div>
+		
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Wallet</th>
+					<th>Description</th>
+					<th>Coin</th>
+					<th>Balance</th>
+					<th>Value</th>
+					<th>Open wallet</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="wallet : ${wallets}">
+					<td th:text="${wallet.address}">walletAddress</td>
+					<td th:text="${wallet.description}">description</td>
+					<td th:text="${wallet.coin.coinMarketCapCoin.symbol}">coinName</td>
+					<td th:text="${#numbers.formatDecimal(wallet.currentWalletAmount, 1, 'POINT', 8, 'COMMA')}">currentWalletAmount</td>
+					<td th:utext="${currency.currencySymbol + ' ' + #numbers.formatDecimal(wallet.currentWalletValue, 1, 'POINT', 2, 'COMMA')}">currentWalletValue</td>
+					<td>
+						<a th:href="@{/wallet/details/{id}(id=${wallet.id})}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+							
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+    </div>
+    
+    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/loadMenu.js"></script>
+    <script src="/js/profitLossFix.js"></script>
+
+</body>
+</html>
